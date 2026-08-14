@@ -2962,6 +2962,14 @@ documented tags of the model Leanpub's implementation targets), and they are
 the distinctions an author actually reaches for when reading their own prose
 aloud.
 
+Realizing the configured duration is the Markua Processor's responsibility,
+not the narration engine's. Engines' own pause tags are qualitative — they
+name a kind of pause, not a number of seconds — and where an engine accepts a
+duration at all it may silently cap it, or, on some models, read the markup
+aloud instead of pausing. A processor which needs the duration an author
+asked for should produce the pause itself, by inserting that much silence into
+the assembled audio, rather than by passing a duration through to the engine.
+
 ### The `audio` attribute
 
 An `audio` attribute can be applied to a span or block to direct how its text
@@ -2994,6 +3002,12 @@ a portable starting point rather than an exhaustive one.
 
 In non-audio output the span renders as its plain text and the attribute has no
 visible effect.
+
+As with every attribute list, an `audio` attribute on a block must sit
+immediately above that block with no blank line between them. Note also that
+an `{audio: …}` line at the very start of a Markua document, before any other
+content, would be read as a document settings hash rather than as an attribute
+list — the position where document settings are defined.
 
 ### Emphasis is narration markup
 
@@ -3046,6 +3060,18 @@ fair question.
 This whole paragraph is spoken by voice 2, and the next paragraph
 reverts to the default voice on its own — there is nothing to reset.
 ~~~
+
+Note that a `voice` attribute list on a block must sit **immediately above
+that block, with no blank line between them**, exactly as a `lang` attribute
+list does. An attribute list with a blank line under it is attached to
+nothing. The `voice-*` directives are the construct which deliberately stands
+alone, and the hyphenated spelling is what tells the two apart.
+
+At the very start of a Markua document, before any other content, a
+`{voice: 1}` line is not an attribute list at all: it is a document settings
+hash setting the document's default voice, which is the first of the three
+mechanisms above. This mirrors `{lang: eng}` exactly, and means the same
+thing in both readings.
 
 ### The `voice-*` directives
 
